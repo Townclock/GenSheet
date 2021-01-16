@@ -1,4 +1,6 @@
 //https://github.com/mxgmn/WaveFunctionCollapse/blob/master/Model.cs
+let ALN = 1000000  // arbitrarily large number
+
 
 function Sum(total, num) {return total + num;}
 
@@ -35,24 +37,10 @@ let model = {
     {type:'B', content:[], weights:[]},
     {type:'A', content:[], weights:[]}
   ],
-  propagator: [[[]]],
-  compatible: [[[]]],
-  observer: [],
 
   stack: [], //stack of tuples in ref code
   stackSize: 0,
 
-  weights : [],
-  weightLogWeights : [],
-
-  sumOfOnes : [],
-  sumOfWeights : 0,
-  sumOfWeightsLogWeights: 0,
-  startingEntropy:0,
-
-  sumOfWeights : [],
-  sumOfWeightsLogWeights: [],
-  startingEntropy:[]
 }
 
 function Init(){
@@ -86,19 +74,65 @@ function Observe()
       let winner = model.wave[section].content[locInSection][i];
       model.wave[section].content[locInSection] = [winner];
       console.log(winner);
-      model.wave[section].weights[locInSection] = 1000000;
+      model.wave[section].weights[locInSection] = ALN;
     }
     else 
       pick -= model.wave[section].content[locInSection][i].weight;
   }
+  Propagate(section, locInSection);
+}
 
+function CheckComplete (){
+  let locations = [];
+  model.wave.forEach(function(section){
+    locations = locations.concat(section.weights)
+  })
+  if (locations.sort(function(a,b){return a-b})[0] < ALN)
+    return true
+  return false
+  
+}
+
+function Propagate (section, loc){
+  let previous, next, adjactents;
+  if (loc === 0){
+    if (section === 0)
+      previous = [4, 31]
+    else
+      previous = [section-1, 31]
+  }
+  else
+    previous = [section, loc-1]
+
+  if (loc === 31){
+    if (section === 4)
+      next = [0, 1]
+    else
+      next = [section+1, 1]
+  }
+  else next = [section, loc+1]
+  let sectionType = model.wave[section].type;
+  adjacents = model.wave.filter(function(e){return e.type === sectionType});
+
+
+//check next
+//check previous
+console.log(adjacents)
+adjacents.forEach(function(adjacent){
+  adjacent = model.wave.indexOf(adjacent)
+  model.wave[adjacent].weights[loc] = model.wave[section].weights[loc]
+  model.wave[adjacent].content[loc] = model.wave[section].content[loc]
+})
+
+
+// constrain all of these according to section, loc
+// if any of them loose possibilities, call propogate on them 
+// recursive propgation calls across sections are unnessesary
 }
 
 
 
-
-
-
+// make sure to update weights as propogation constrains chords options
 
 
 
