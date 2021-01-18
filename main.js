@@ -1,4 +1,8 @@
+
 //https://github.com/mxgmn/WaveFunctionCollapse/blob/master/Model.cs
+
+//https://github.com/0xfe/vexflow
+
 let ALN = 1000000  // arbitrarily large number
 
 
@@ -211,13 +215,25 @@ Print()
 
 
 
+//this section take from the VF quickstart
 
+const VF = Vex.Flow;
 
+// create renderer and attach it to div vf
+const div = document.getElementById("vf")
+const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
 
-function drawRect(x, y){
-  var c = document.getElementById("space");
-  var ctx = c.getContext("2d");
-  ctx.beginPath();
-  ctx.rect(x*100, 7*100, 100, 100);
-  ctx.fill();
+// configuren rendering context
+renderer.resize(1000, 1200);
+const context = renderer.getContext();
+context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
+
+//create staves
+let staves = [];
+for (let i = 0; i < 8; i++) {
+  for (let j = 0; j< 4; j++){
+    const stave = new VF.Stave(10 + 200*j, 100*i, 200);
+    //stave.addClef("treble").addTimeSignature("4/4");
+    stave.setContext(context).draw();
+  }
 }
