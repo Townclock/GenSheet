@@ -178,21 +178,57 @@ function Propagate (section, loc){
   })
 
 }
- 
 
+let key = Math.floor(Math.random()*12);
+let keys = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"]
+let startKey = keys[key]
 function Print(){
-  let output = ""
-  model.wave.forEach(function(section){
-    section.content.forEach(function(content) {
-      output += content[0].follow + "(" + content[0].mod + ")" + "\t"
+  let output = []
+  for (let i = 0; i<8; i++) output[i]=[];
+  model.wave.forEach(function(section, sectionCount){
+    section.content.forEach(function(content, count) {
+      let bar = Math.floor(count/16 + sectionCount*2)
+
+      key += content[0].mod +12;
+      key %= 12;
+
+      let chord = content[0].follow;
+      console.log(key, chord)
+      switch(chord)
+      {
+        case ("I"):
+          output[bar].push(keys[(key)%12] + "+7");
+          break;
+        case ("ii"):
+          output[bar].push(keys[(key+2)%12] + "-7");
+          break
+        case ("V"):
+          output[bar].push(keys[(key+7)%12] + "7");
+          break; 
+      
+      }
     
     })
-    output += "<br>"
+  })
+
+  let vexTabOutput =  "tabstave notation=true tablature=false key=" + startKey +" time=4/4 \n";
+  
+  output.forEach(function(bar, index){
+    console.log(bar)
+    if (index !== 0)
+      vexTabOutput += "tabstave notation=true tablature=false\n";
+    vexTabOutput += "notes :h  | | | | | \n text :q ";
+    bar.forEach(function(chord, pos){ 
+      console.log(chord)
+      vexTabOutput += chord;
+      vexTabOutput += (pos !== bar.length-1) ? ", " : "\n";
+    });
   })
 
 
 
-  document.getElementById("chords").innerHTML = output;
+  document.getElementById("vextab").innerHTML = 
+    "options space=20\n" + vexTabOutput + "options space=25"
 }
 
 
@@ -214,26 +250,3 @@ Print()
 
 
 
-
-//this section take from the VF quickstart
-
-const VF = Vex.Flow;
-
-// create renderer and attach it to div vf
-const div = document.getElementById("vf")
-const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
-
-// configuren rendering context
-renderer.resize(1000, 1200);
-const context = renderer.getContext();
-context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
-
-//create staves
-let staves = [];
-for (let i = 0; i < 8; i++) {
-  for (let j = 0; j< 4; j++){
-    const stave = new VF.Stave(10 + 200*j, 100*i, 200);
-    //stave.addClef("treble").addTimeSignature("4/4");
-    stave.setContext(context).draw();
-  }
-}
