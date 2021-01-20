@@ -1,25 +1,8 @@
 
-function Propagate (model, section, loc){
-  let previous, next, adjactents;
-  if (loc === 0){
-    if (section === 0)
-      previous = [3, 31]
-    else
-      previous = [section-1, 31]
-  }
-  else
-    previous = [section, loc-1]
+function Propagate (model, loc){
 
-  if (loc === 31){
-    if (section === 3)
-      next = [0, 0]
-    else
-      next = [section+1, 0]
-  }
-  else next = [section, loc+1]
-
-  let sectionType = model.wave[section].type;
-  adjacents = model.wave.filter(function(e){return e.type === sectionType});
+  let previous = (loc - 1 + model.wave.length ) % model.wave.length
+  let next = (loc + 1 + model.wave.length ) % model.wave.length
 
 
   // assume that there are no changes that need to be propagate
@@ -27,18 +10,22 @@ function Propagate (model, section, loc){
   let propagatePrevious = false;
 
   // get all the rules for next
-  let nextRules = model.wave[next[0]].content[next[1]];
+  let nextBlock = model.wave[next];
+  let nextRules = nextBlock.rules;
+
+
   // get rules for origin
-  let focusRules = model.wave[section].content[loc]
+  let focusRules = model.wave[loc].rules;
 
   let rulesToRemove = [];
+
   // check all rules of next and remove them, propogate if changed
   nextRules.forEach(function(followingRule, index){
     // assume no rules are valid
     let valid = false
     focusRules.forEach(function(leadingRule){
-      if (leadingRule.follow == followingRule.lead &&
-          leadingRule.key == followingRule.key){
+      if (leadingRule.follow === followingRule.lead &&
+                (leadingRule.key+leadingRule.mod+12)%12 === followingRule.key){
         valid = true;
       }
     })
@@ -48,7 +35,7 @@ function Propagate (model, section, loc){
   // remove the rules
   let removalOffset = 0;
   rulesToRemove.forEach(function(rule){
-    model.wave[next[0]].weights[next[1]] -= nextRules[rule-removalOffset].weight;
+    nextBlock.weight -= nextRules[rule-removalOffset].weight;
     nextRules.splice(rule-removalOffset, 1)
     removalOffset +=1;
   });
@@ -56,7 +43,8 @@ function Propagate (model, section, loc){
         propagateNext = true;
 
   // get all the rules for previous
-  let previousRules = model.wave[previous[0]].content[previous[1]];
+  let previousBlock = model.wave[previous]
+  let previousRules = previousBlock.rules;
 
   rulesToRemove = [];
   // check all rules of next and remove them, propogate if changed
@@ -64,8 +52,8 @@ function Propagate (model, section, loc){
     // assume no rules are valid
     let valid = false
     focusRules.forEach(function(followingRule){
-      if (leadingRule.follow == followingRule.lead && 
-          leadingRule.key == followingRule.key){
+      if (leadingRule.follow === followingRule.lead && 
+                (leadingRule.key+leadingRule.mod +12)%12 === followingRule.key){
         valid = true;
       }
     })
@@ -75,7 +63,7 @@ function Propagate (model, section, loc){
   // remove the rules
   removalOffset = 0;
   rulesToRemove.forEach(function(rule){
-    model.wave[previous[0]].weights[previous[1]] -= previousRules[rule-removalOffset].weight;
+    previousBlock.weight -= previousRules[rule-removalOffset].weight;
     previousRules.splice(rule-removalOffset, 1)
     removalOffset +=1;
   });
@@ -83,19 +71,53 @@ function Propagate (model, section, loc){
         propagatePrevious = true;
 
 
-  if (propagateNext) Propagate(model, next[0], next[1]);
-  if (propagatePrevious) Propagate(model, previous[0], previous[1]);
+  if (propagateNext) Propagate(model, model.wave.indexOf(nextBlock));
+  if (propagatePrevious) Propagate(model, model.wave.indexOf(previousBlock));
 
-
+/*
+  let sectionType = model.sections[section].type;
+  let adjacentSections = model.wave.sections.filter(function(e){return e.type === sectionType});
+  let offset = model.GetLocOffset;
   // create consistency across sections
-  adjacents.forEach(function(adjacent){
-    adjacent = model.wave.indexOf(adjacent)
-    let weight = model.wave[adjacent].weights[loc] 
-    model.wave[adjacent].weights[loc] = model.wave[section].weights[loc]
-    model.wave[adjacent].content[loc] = model.wave[section].content[loc]
-    
+  adjacentSections.forEach(function(section){
+      let adjacent = section.start+offset;
+      let rulesToRemove = [];
+      model.wave[adjacent].forEach(rule){
+        model.wave[loc].forEach(pRule)
+        if ( rule.lead == pRule.lead &&
+             rule.foloow == pRule.follow && 
+             rule.length == pRule.length &&
+             rule.mod == pRule.mode
+        )
+      }
+
+      
+
+
+      while (
+        model.wave[(loc+size + model.wave.length)%model.wave.length].indexOf(i) >= 0 &&
+        size < winner.length
+      )
+      {
+        model.wave[loc+1+model.wave.length)%model.wave.length] = [winner]
+        model.weights[loc+1+model.wave.length)%model.wave.length] = winner.weight
+        size++;
+      }
+      while (
+        model.wave[(loc-1 - iSize + model.wave.length)%model.wave.length].indexOf(i) >= 0 &&
+        size + iSize< winner.length
+      )
+      {
+        iSize++;
+        model.wave[loc-1 - iSize+model.wave.length)%model.wave.length] = [winner]
+        model.weights[loc-1 - iSize+model.wave.length)%model.wave.length] = winner.weight
+      }
+ 
+   
+
+
     if (weight !== model.wave[adjacent].weights[loc])
       Propagate(model, adjacent, loc)
-  })
+  })*/
 
 }
