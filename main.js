@@ -8,25 +8,17 @@ let keys = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"]
 
 //leadLength?
 let protoRules = [
-  {lead:"I", follow:"I", mod: 1, weight: 0.5, followLength: 2},
-  {lead:"I", follow:"I", mod: 2, weight: 0.5, followLength: 4},
-  {lead:"I", follow:"I", mod: 3, weight: 0.5, followLength: 2},
   {lead:"I", follow:"I", mod: 4, weight: 0.5, followLength: 4},
-  {lead:"I", follow:"I", mod: 5, weight: 0.5, followLength: 2},
-  {lead:"I", follow:"I", mod: 6, weight: 0.5, followLength: 4},
-  {lead:"I", follow:"I", mod: 7, weight: 0.5, followLength: 2},
-  {lead:"I", follow:"I", mod: 8, weight: 0.5, followLength: 4},
-  {lead:"I", follow:"I", mod: 9, weight: 0.5, followLength: 2},
-  {lead:"I", follow:"I", mod: 10, weight: 0.5, followLength: 4},
-  {lead:"I", follow:"I", mod: 11, weight: 0.5, followLength: 2},
-  {lead:"I", follow:"I", mod: 0, weight: 0.5, followLength: 4}//,
-  //{lead:"I", follow:"ii", mod: 0, weight: 1, followLength: 4},
-  //{lead:"ii", follow:"V", mod: 0, weight: 1, followLength: 2},
-  //{lead:"V", follow:"I", mod: 0, weight: 0.5, followLength: 2},
-  //{lead:"V", follow:"I", mod: 0, weight: 0.5, followLength: 2},
-  //{lead:"V", follow:"ii", mod: -2, weight: 0.5, followLength: 1},
-  //{lead:"V", follow:"ii", mod: -2, weight: 0.5, followLength: 1}
-
+  {lead:"I", follow:"ii", mod: 0, weight: 1, followLength: 4},
+  {lead:"ii", follow:"V", mod: 0, weight: 1, followLength: 4},
+  {lead:"V", follow:"I", mod: 0, weight: 0.5, followLength: 4},
+  {lead:"V", follow:"ii", mod:-2 , weight: 0.5, followLength: 4},
+  /*{lead:"I", follow:"I", mod: 4, weight: 0.5, followLength: 2},
+  {lead:"I", follow:"ii", mod: 0, weight: 1, followLength: 2},
+  {lead:"ii", follow:"V", mod: 0, weight: 1, followLength: 2},
+  {lead:"V", follow:"I", mod: 0, weight: 0.5, followLength: 2},
+  {lead:"V", follow:"ii", mod:-2 , weight: 0.5, followLength: 2}
+*/
 ]
 function CopyRule(rule){
   return {
@@ -61,11 +53,13 @@ let key = Math.floor(Math.random()*12);
 let startKey = keys[key]
 
 
-
+let quit = 100;
 let br = 500;
 let model = Init()
 console.log(CheckComplete(model))
-while (!CheckComplete(model)){
+
+//function Proceed(){ 
+  while (!CheckComplete(model)){
 //for (let i = 0; i < 100; i++){
 Observe(model)
   console.log("done?")
@@ -74,10 +68,15 @@ Observe(model)
     model = Init();
     console.log("break loop")
     br = 500;
+    quit--;
   }
-}
-console.log(model.wave)
-Print()
+  if (quit < 0) {console.log("DISASTER");break};}
+console.log(model.sections, model.wave)
+//}
+
+
+//console.log(model.wave)
+Print(model)
 
 
 
