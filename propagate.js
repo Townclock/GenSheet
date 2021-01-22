@@ -115,7 +115,6 @@ function Propagate (model, loc){
     
 
    propagateStack.forEach(function(loc){
-    console.log(loc)
      Propagate(model, loc)
   })
 

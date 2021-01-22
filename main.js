@@ -56,13 +56,11 @@ let startKey = keys[key]
 let quit = 100;
 let br = 500;
 let model = Init()
-console.log(CheckComplete(model))
 
 //function Proceed(){ 
-  while (!CheckComplete(model)){
+while (!CheckComplete(model)){
 //for (let i = 0; i < 100; i++){
 Observe(model)
-  console.log("done?")
   br--;
   if (br < 0){
     model = Init();
@@ -72,11 +70,10 @@ Observe(model)
   }
   if (quit < 0) {console.log("DISASTER");break};}
 console.log(model.sections, model.wave)
-//}
-
-
-//console.log(model.wave)
 Print(model)
+
+
+
 
 
 

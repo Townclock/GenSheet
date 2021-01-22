@@ -18,7 +18,8 @@ function Observe(model, propFlag=true)
       if (observedBlock.length === "x"){
         observedBlock.length = winner.followLength
   // remove blocks as many bocks as possible to reach length
-        model.Fit(loc, true)
+        console.log("call fit")
+        model.Fit(loc)
       }
 
       break;

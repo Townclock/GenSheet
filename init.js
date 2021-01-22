@@ -49,49 +49,58 @@ function Init(){
     Normalize: function(exp) {
       return (exp + this.wave.length) % this.wave.length
     },
-    Fit: function(loc, observeFlag)
+    BlocksCanBeAdjacent: function(lead, follow){
+      let canBeAdjacent = false
+      follow.rules.forEach(function(followingRule, index){
+        lead.rules.forEach(function(leadingRule){
+        if (leadingRule.follow === followingRule.lead 
+          && ((leadingRule.key+followingRule.mod+12)%12 === followingRule.key)
+          )
+          {
+            canBeAdjacent = true;
+          }
+        })
+      })
+      return canBeAdjacent;
+    },
+    Fit: function(loc)
     {
-      let originRule = this.wave[loc].rules[0] // should contain the one winning rule
-      let blocksToRemove = [];
-      let size = 1;
-      let iSize = 0;
-      while (
-        this.wave[this.Normalize(loc+size)].weight < ALN
-        && this.wave[this.Normalize(loc+size+1)].rules.filter(
-          function(rule){
-              return (originRule.follow === rule.lead && 
-                      originRule.key+rule.mod === rule.key)
-          }).length > 0
-        && size < originRule.followLength 
-      )
-      {
-        let next = this.Normalize(loc+size)
-          blocksToRemove.push(model.wave[next])
-        size++;
-      }
-      while (
-        this.wave[this.Normalize(loc-1 - iSize)].weight < ALN
-        && this.wave[this.Normalize(loc+size+1)].rules.filter(
-          function(rule){
-              return (rule.follow === originRule.lead && 
-                      rule.key+originRule.mod === originRule.key)
-          }).length > 0
-        &&  size + iSize < originRule.followLength
-      )
-      {
-        let prev = this.Normalize(loc-1-iSize)
-          blocksToRemove.push(model.wave[prev])
-          iSize++;
+      // get the section to create space in 
+      let model = this;
+      let originBlock = model.wave[loc]
+      let originSectionBlocks = originBlock.section.blocks
+      let ruleLength = originBlock.rules[0].followLength;
+
+      //get a block by removal priority 
+      //  valid to be removed
+      //  weight not set to ALN
+      //  sorted by sum of adjacent block weights
+      function GetLooseBlock(blocks){
+        let removableBlocks = blocks.slice(0, blocks.length)
+        .filter(function(block){
+          let loc = model.wave.indexOf(block);
+          let canBeAdjacent = model.BlocksCanBeAdjacent(model.wave[model.Normalize(loc-1)], model.wave[model.Normalize(loc+1)])
+          return (block.weight < ALN && canBeAdjacent)
+        })
+        .sort(function(a, b){
+          return a.weight - b.weight;
+        })
+        
+        console.log(removableBlocks)        
+        // test print here and find out why this array is empty
+      return removableBlocks;
+      } 
+      let size;
+      console.log("pre-for", ruleLength)
+      for ( size = 1; size < ruleLength; size++){
+        let blocksToRemove = GetLooseBlock(originSectionBlocks).slice(0, 1)
+        if (blocksToRemove < 1) break;
+        this.RemoveBlocks(blocksToRemove);
       }
 
       if (size ===1)
-          console.log("could not grow", originRule )
-    if (observeFlag){
-      this.wave[loc].length = size+iSize;
-      
-
-       this.RemoveBlocks(blocksToRemove);
-    }
+          console.log("could not grow", originBlock.rules[0] )
+      originBlock.length = size;
         
     }
 
