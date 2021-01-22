@@ -26,10 +26,11 @@ function Observe(model, propFlag=true)
     else 
       pick -= model.wave[loc].rules[i].weight;
   }
+  //early fail state catch
+  if (observedBlock.rules.length === 0) return false;
 
   if (propFlag)
   {
-    console.log("Block killed itself???")
     Propagate(model, model.wave.indexOf(observedBlock));
   }
 
@@ -50,7 +51,7 @@ function Observe(model, propFlag=true)
     })
 
   })
-
+  return true;
 }
 
 

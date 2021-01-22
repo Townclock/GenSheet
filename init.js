@@ -90,7 +90,6 @@ function Init(){
       let originSectionBlocks = originBlock.section.blocks
       let ruleLength = originBlock.rules[0].followLength;
 
-    console.log("Block killed itself???", model.wave.indexOf(originBlock), originBlock.section.id, originBlock.section.blocks.indexOf(originBlock),model)
       let size;
       for ( size = 1; size < ruleLength; size++){
         let blocksToRemove = model.GetLooseBlocks(originSectionBlocks).slice(0, 1)
@@ -104,7 +103,6 @@ function Init(){
           console.log("could not grow", originBlock.rules[0] )
       originBlock.length = size;
         
-    console.log("Block killed itself???", model.wave.indexOf(originBlock))
     }
 
   }

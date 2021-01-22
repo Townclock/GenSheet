@@ -52,16 +52,15 @@ for (i = 0; i < chordRules.length; i++)
 let key = Math.floor(Math.random()*12);
 let startKey = keys[key]
 
-
+let model;
 
 function Proceed(){ 
 let quit = 0;
-let br = 500;
-let model = Init()
+let br = 300;
+model = Init()
 while (!CheckComplete(model)){
-Observe(model)
   br--;
-  if (br < 0 || DetectErrorState(model)){
+  if (br < 0 || DetectErrorState(model) || Observe(model) == false){
     model = Init();
     console.log("break loop")
     br = 500;
