@@ -63,20 +63,11 @@ function Init(){
       })
       return canBeAdjacent;
     },
-    Fit: function(loc)
-    {
-      // get the section to create space in 
-      let model = this;
-      let originBlock = model.wave[loc]
-      let originSectionBlocks = originBlock.section.blocks
-      let ruleLength = originBlock.rules[0].followLength;
-
-    console.log("Block killed itself???", model.wave.indexOf(originBlock), originBlock.section.id, originBlock.section.blocks.indexOf(originBlock),model)
       //get a block by removal priority , 
       //  valid to be removed
       //  weight not set to ALN
       //  sorted by sum of adjacent block weights
-      function GetLooseBlock(blocks){
+    GetLooseBlocks:function(blocks){
         let removableBlocks = blocks.slice(0, blocks.length)
         .filter(function(block){
           let loc = model.wave.indexOf(block);
@@ -90,10 +81,19 @@ function Init(){
         
         // test print here and find out why this array is empty
       return removableBlocks;
-      } 
+      } ,
+    Fit: function(loc)
+    {
+      // get the section to create space in 
+      let model = this;
+      let originBlock = model.wave[loc]
+      let originSectionBlocks = originBlock.section.blocks
+      let ruleLength = originBlock.rules[0].followLength;
+
+    console.log("Block killed itself???", model.wave.indexOf(originBlock), originBlock.section.id, originBlock.section.blocks.indexOf(originBlock),model)
       let size;
       for ( size = 1; size < ruleLength; size++){
-        let blocksToRemove = GetLooseBlock(originSectionBlocks).slice(0, 1)
+        let blocksToRemove = model.GetLooseBlocks(originSectionBlocks).slice(0, 1)
         let neighbor = model.Normalize(model.wave.indexOf(blocksToRemove[0])+1);
         Propagate(model, neighbor);
         if (blocksToRemove < 1) break;

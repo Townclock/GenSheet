@@ -32,6 +32,25 @@ function Observe(model, propFlag=true)
     console.log("Block killed itself???")
     Propagate(model, model.wave.indexOf(observedBlock));
   }
+
+  //clear any rules that require more blocks available in their given section
+  //unless those blocks have been observerd and have a length determined
+  model.sections.forEach(function(section){
+    let availableBlocks = model.GetLooseBlocks(section.blocks).length;
+    section.blocks.forEach(function(block){
+      let rulesToRemove = [];
+      block.rules.forEach(function(rule){
+        if (rule.followLength > availableBlocks && block.length === "x")
+          rulesToRemove.push(rule);
+      })
+      rulesToRemove.forEach(function(rule){
+        block.weight -= rule.weight;
+        block.rules.splice(block.rules.indexOf(rule), 1)
+      })
+    })
+
+  })
+
 }
 
 

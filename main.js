@@ -13,12 +13,12 @@ let protoRules = [
   {lead:"ii", follow:"V", mod: 0, weight: 1, followLength: 4},
   {lead:"V", follow:"I", mod: 0, weight: 0.5, followLength: 4},
   {lead:"V", follow:"ii", mod:-2 , weight: 0.5, followLength: 4},
-  /*{lead:"I", follow:"I", mod: 4, weight: 0.5, followLength: 2},
+  {lead:"I", follow:"I", mod: 4, weight: 0.5, followLength: 2},
   {lead:"I", follow:"ii", mod: 0, weight: 1, followLength: 2},
   {lead:"ii", follow:"V", mod: 0, weight: 1, followLength: 2},
   {lead:"V", follow:"I", mod: 0, weight: 0.5, followLength: 2},
   {lead:"V", follow:"ii", mod:-2 , weight: 0.5, followLength: 2}
-*/
+
 ]
 function CopyRule(rule){
   return {
@@ -53,11 +53,11 @@ let key = Math.floor(Math.random()*12);
 let startKey = keys[key]
 
 
+
+function Proceed(){ 
 let quit = 0;
 let br = 500;
 let model = Init()
-
-function Proceed(){ 
 while (!CheckComplete(model)){
 Observe(model)
   br--;
