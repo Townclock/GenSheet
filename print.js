@@ -34,6 +34,28 @@ function Print(model){
     });
   })
 
-  document.getElementById("vextab").innerHTML = 
-    "options space=20\n" + vexTabOutput + "options space=25"
+  let editor = document.getElementsByClassName("editor")[0];
+  if (editor)
+  {    editor.value = 
+      "options space=20\n" + vexTabOutput + "options space=25"
+      document.getElementsByClassName("vextab-auto")[0].children[4].focus()
+      KeyUp();
+  }
+  else
+    document.getElementById("vextab").innerHTML = 
+      "options space=20\n" + vexTabOutput + "options space=25"
+
 }
+
+//trigger fake keyup event to refresh tab input
+function KeyUp() {
+  const event = new KeyboardEvent('keyup', {
+    view: window,
+    bubbles: true,
+    cancelable: true
+  });
+  const cb = document.getElementsByTagName('textarea')[0];
+  const cancelled = !cb.dispatchEvent(event);
+  
+}
+

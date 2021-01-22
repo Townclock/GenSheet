@@ -53,25 +53,25 @@ let key = Math.floor(Math.random()*12);
 let startKey = keys[key]
 
 
-let quit = 100;
+let quit = 0;
 let br = 500;
 let model = Init()
 
-//function Proceed(){ 
+function Proceed(){ 
 while (!CheckComplete(model)){
-//for (let i = 0; i < 100; i++){
 Observe(model)
   br--;
-  if (br < 0){
+  if (br < 0 || DetectErrorState(model)){
     model = Init();
     console.log("break loop")
     br = 500;
-    quit--;
+    quit++;
   }
-  if (quit < 0) {console.log("DISASTER");break};}
-console.log(model.sections, model.wave)
-Print(model)
+console.log("Re-initialized. . .", quit, " times")
 
+  if (quit >100) {console.log("DISASTER");break};}
+  Print(model)
+}
 
 
 

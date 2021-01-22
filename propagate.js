@@ -5,7 +5,10 @@ function Propagate (model, loc){
   let rightNeighbor = model.Normalize(loc+1)
   let leftNeighbor = model.Normalize(loc-1)
 
+
   let originBlock = model.wave[loc];
+  
+  
   let rightBlock = model.wave[rightNeighbor]
 // get all the rules for next
   let focusRules = originBlock.rules;
@@ -35,8 +38,8 @@ function Propagate (model, loc){
     nextRules.splice(rule-removalOffset, 1)
     removalOffset +=1;
   });
-  //if (rulesToRemove.length > 0)
-  //      propagateStack.push(rightNeighbor);
+  if (rulesToRemove.length > 0)
+        propagateStack.push(rightNeighbor);
 
 
   let leftBlock = model.wave[leftNeighbor]
@@ -70,8 +73,8 @@ function Propagate (model, loc){
     });
     
   
-  //if (rulesToRemove.length > 0)
-  //        propagateStack.push(leftNeighbor);
+  if (rulesToRemove.length > 0)
+          propagateStack.push(leftNeighbor);
 
   
   
@@ -114,9 +117,9 @@ function Propagate (model, loc){
   })
     
 
-   propagateStack.forEach(function(loc){
-     Propagate(model, loc)
-  })
+//   propagateStack.forEach(function(loc){
+//     Propagate(model, loc)
+//  })
 
     
     //ITERATE THROUGH THE PROPAGATE STACK

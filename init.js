@@ -71,7 +71,8 @@ function Init(){
       let originSectionBlocks = originBlock.section.blocks
       let ruleLength = originBlock.rules[0].followLength;
 
-      //get a block by removal priority 
+    console.log("Block killed itself???", model.wave.indexOf(originBlock), originBlock.section.id, originBlock.section.blocks.indexOf(originBlock),model)
+      //get a block by removal priority , 
       //  valid to be removed
       //  weight not set to ALN
       //  sorted by sum of adjacent block weights
@@ -80,20 +81,21 @@ function Init(){
         .filter(function(block){
           let loc = model.wave.indexOf(block);
           let canBeAdjacent = model.BlocksCanBeAdjacent(model.wave[model.Normalize(loc-1)], model.wave[model.Normalize(loc+1)])
-          return (block.weight < ALN && canBeAdjacent)
+          return (block.weight < ALN/2 && canBeAdjacent)
+          // there is no reason why dividing ALN by two should work unless I was subtracting weight when I should not ahve
         })
         .sort(function(a, b){
-          return a.weight - b.weight;
+          return b.weight - a.weight;
         })
         
-        console.log(removableBlocks)        
         // test print here and find out why this array is empty
       return removableBlocks;
       } 
       let size;
-      console.log("pre-for", ruleLength)
       for ( size = 1; size < ruleLength; size++){
         let blocksToRemove = GetLooseBlock(originSectionBlocks).slice(0, 1)
+        let neighbor = model.Normalize(model.wave.indexOf(blocksToRemove[0])+1);
+        Propagate(model, neighbor);
         if (blocksToRemove < 1) break;
         this.RemoveBlocks(blocksToRemove);
       }
@@ -102,6 +104,7 @@ function Init(){
           console.log("could not grow", originBlock.rules[0] )
       originBlock.length = size;
         
+    console.log("Block killed itself???", model.wave.indexOf(originBlock))
     }
 
   }

@@ -1,11 +1,9 @@
-
 function Observe(model, propFlag=true)
 {
-
   let locations = model.wave;
   let loc = locations.slice(0, model.wave.length).indexOf(locations.slice(0, locations.length).sort(function(a,b){return a.weight-b.weight})[0]);
   let observedBlock = model.wave[loc];
-  
+
 
   // generate a random value and select one of the possible chords
   let pick = Math.random()*model.wave[loc].weight;
@@ -30,7 +28,10 @@ function Observe(model, propFlag=true)
   }
 
   if (propFlag)
+  {
+    console.log("Block killed itself???")
     Propagate(model, model.wave.indexOf(observedBlock));
+  }
 }
 
 
@@ -39,5 +40,13 @@ function CheckComplete (model){
   if (locations.slice(0, locations.length).sort(function(a,b){return a.weight-b.weight})[0].weight < ALN)
     return false
   return true
+}
+
+function DetectErrorState(model){
+  model.wave.forEach(function(block){
+    if (block.rules.length<1)
+      return true;
+    else false;
+  })
 }
 
