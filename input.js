@@ -9,7 +9,6 @@ function loadFile() {
     result = xmlhttp.responseText;
   }
   protoRules = ProcessRules(result);
-  console.log(protoRules)
   return result;
 }
 
@@ -30,7 +29,6 @@ function ProcessRules (data){
       output.push(r);
     }
   })
-  console.log(output)
   return output;
 }
 
@@ -40,7 +38,6 @@ function CompressRules (ruleList){
     for (let i = x-1; i > -1; i--){
       if (SameRule(ruleList[i], ruleList[x])){
         ruleList[i].weight += ruleList[x].weight;
-        console.log(ruleList[i], ruleList[x])
         ruleList.splice(i, 1);
         break;
       }
