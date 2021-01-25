@@ -106,15 +106,16 @@ function Init(){
     }
 
   }
-  for (i=0; i < 128; i++){
-    section = model.sections[Math.floor(i/32)];
+  let aSection, bSection;
+  //generate A section
+  for (i=0; i < 32; i++){
+    section = model.sections[Math.floor(i/8)];
     let block = new Block(
       chordRules.slice(0, chordRules.length), 
       startingTotalWeight,
       section);
-    
-    model.wave.push(block);
-    section.blocks.push(block)  
+    section.blocks.push(block) 
+    model.wave.push(block)
   }
   return model;
 }

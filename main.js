@@ -69,7 +69,7 @@ while (!CheckComplete(model)){
     quit++;
   }
 
-  if (quit >100) {console.log("DISASTER");break};}
+  if (quit >500) {console.log("DISASTER");break};}
   Print(model)
 }
 

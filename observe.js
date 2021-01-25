@@ -3,6 +3,7 @@ function Observe(model, propFlag=true)
   let locations = model.wave;
   let loc = locations.slice(0, model.wave.length).indexOf(locations.slice(0, locations.length).sort(function(a,b){return a.weight-b.weight})[0]);
   let observedBlock = model.wave[loc];
+//        console.log(observedBlock.rules.length, observedBlock.section, model.wave)
 
 
   // generate a random value and select one of the possible chords
@@ -16,8 +17,7 @@ function Observe(model, propFlag=true)
       if (observedBlock.length === "x"){
         observedBlock.length = winner.followLength
   // remove blocks as many bocks as possible to reach length
-        console.log("call fit")
-        model.Fit(loc)
+  //        model.Fit(loc)
       }
 
       break;
@@ -33,7 +33,7 @@ function Observe(model, propFlag=true)
   {
     Propagate(model, model.wave.indexOf(observedBlock));
   }
-
+/*
   //clear any rules that require more blocks available in their given section
   //unless those blocks have been observerd and have a length determined
   model.sections.forEach(function(section){
@@ -50,7 +50,7 @@ function Observe(model, propFlag=true)
       })
     })
 
-  })
+  })*/
   return true;
 }
 
