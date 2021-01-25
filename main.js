@@ -54,23 +54,33 @@ let startKey = keys[key]
 
 let model;
 
-function Proceed(){ 
-let quit = 0;
-let br = 300;
-model = Init()
-while (!CheckComplete(model)){
-  br--;
-  if (br < 0 || DetectErrorState(model) || Observe(model) == false){
-    console.log("break loop")
-    console.log("Re-initialized. . .", quit, " times")
-    console.log(model)
-    model = Init();
-    br = 500;
-    quit++;
-  }
+let progress;
 
-  if (quit >500) {console.log("DISASTER");break};}
-  Print(model)
+function Proceed(){ 
+  progress = document.getElementById("progress");
+  let quit = 0;
+  let br = 500;
+  model = Init()
+  while (!CheckComplete(model)){
+    br--;
+    if (br < 0 || DetectErrorState(model) || Observe(model) == false){
+      console.log("Re-initialized. . .", quit, " times")
+      progress.innerHTML = "Attempts: " + quit;    
+      model = Init();
+      br = 500;
+      quit++;
+    }
+
+    if (quit >500) {
+      progress.innerHTML = "Failure, Retry?";    
+      console.log("DISASTER");break
+    };
+  }
+  if (quit <= 500)
+  {  
+    progress.innerHTML = "Success";    
+    Print(model)
+  }
 }
 
 

@@ -3,33 +3,51 @@
 
 <script src="input.js"></script>
 <script src="div.prod.js"></script>
-</head>
-
-
-
-<body>
-
-  <p id="chords"> </p>
-<div class="vextab-auto"
-    width=680 scale=1.0 editor="true"
-    editor-width=680 editor-height=330
-    id=vextab
-    >
-    options space=20
-
-
-    tabstave notation=true tablature=false key=A time=4/4
-    notes :q =| | | | |
-    text :h,G Minor,A Major, B Minor, E7
-
-
-    options space=25
-</div>
-</body>
-
 <script src="init.js"></script>
 <script src="observe.js"></script>
 <script src="propagate.js"></script>
 <script src="print.js"></script>
 <script src="main.js"></script>
+
+<style>
+  body {
+    background-color: indigo;
+  }
+
+  .container {
+    width: 700;
+    margin: auto;
+    background-color: white;
+    border: 3px solid black;
+    box-shadow: 3px 3px 3px black
+  }
+  .generate {
+    display: block;
+    width: 100;
+    margin: auto;
+  }
+</style>
+
+</head>
+<body>
+<button class="generate" id="progress" onclick="Proceed()"> Generate </button>
+<div class="container">
+  <div class="vextab-auto"
+      width=680 scale=1.0 editor="true"
+      editor-width=680 editor-height=330
+      id=vextab
+      >
+      options space=20
+
+
+      tabstave notation=true tablature=false key=A time=4/4
+      notes :q =| | | | |
+      text :h,G Minor,A Major, B Minor, E7
+
+
+      options space=25
+  </div>
+  </div>
+</body>
+
 
