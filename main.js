@@ -7,7 +7,7 @@ let ALN = 1000000  // arbitrarily large number
 let keys = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"]
 
 //leadLength?
-let protoRules = [
+/*let protoRules = [
   {lead:"I", follow:"I", mod: 4, weight: 0.5, followLength: 4},
   {lead:"I", follow:"ii", mod: 0, weight: 1, followLength: 4},
   {lead:"ii", follow:"V", mod: 0, weight: 1, followLength: 4},
@@ -19,7 +19,7 @@ let protoRules = [
   {lead:"V", follow:"I", mod: 0, weight: 0.5, followLength: 2},
   {lead:"V", follow:"ii", mod:-2 , weight: 0.5, followLength: 2}
 
-]
+]*/
 function CopyRule(rule){
   return {
     lead:rule.lead, 
@@ -61,12 +61,13 @@ model = Init()
 while (!CheckComplete(model)){
   br--;
   if (br < 0 || DetectErrorState(model) || Observe(model) == false){
-    model = Init();
     console.log("break loop")
+    console.log("Re-initialized. . .", quit, " times")
+    console.log(model)
+    model = Init();
     br = 500;
     quit++;
   }
-console.log("Re-initialized. . .", quit, " times")
 
   if (quit >100) {console.log("DISASTER");break};}
   Print(model)
