@@ -34,25 +34,9 @@ console.log(model.wave.indexOf(observedBlock))
   {
     Propagate(model, model.wave.indexOf(observedBlock));
   }
-/*
-  //clear any rules that require more blocks available in their given section
-  //unless those blocks have been observerd and have a length determined
-  model.sections.forEach(function(section){
-    let availableBlocks = model.GetLooseBlocks(section.blocks).length;
-    section.blocks.forEach(function(block){
-      let rulesToRemove = [];
-      block.rules.forEach(function(rule){
-        if (rule.followLength > availableBlocks && block.length === "x")
-          rulesToRemove.push(rule);
-      })
-      rulesToRemove.forEach(function(rule){
-        block.weight -= rule.weight;
-        block.rules.splice(block.rules.indexOf(rule), 1)
-      })
-    })
-
-  })*/
   model.openBlocks.splice(model.openBlocks.indexOf(observedBlock),1);
+  console.log (observedBlock.section)
+  observedBlock.section.openBlocks.splice(observedBlock.section.openBlocks.indexOf(observedBlock),1);
   return true;
 }
 

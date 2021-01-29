@@ -19,10 +19,10 @@ function Init(){
     wave: [],
     openBlocks: [],
     sections: [
-      {id: 0, type:'A', blocks:[]},
-      {id: 1, type:'A', blocks:[]},
-      {id: 2, type:'B', blocks:[]},
-      {id: 3, type:'A', blocks:[]}
+      {id: 0, type:'A', blocks:[], openBlocks: []},
+      {id: 1, type:'A', blocks:[], openBlocks: []},
+      {id: 2, type:'B', blocks:[], openBlocks: []},
+      {id: 3, type:'A', blocks:[], openBlocks: []}
     ],
   
     GetLocOffset: function (loc) {
@@ -38,8 +38,10 @@ function Init(){
           {
             let adjacentBlockToRemove = section.blocks[index];
             model.wave.splice(model.wave.indexOf(adjacentBlockToRemove), 1)
+            model.openBlocks.splice(model.openBlocks.indexOf(adjacentBlockToRemove),1);
 
             section.blocks.splice(index, 1)
+            section.freeBlocks.splice(index, 1)
           }
 
         })
@@ -115,6 +117,7 @@ function Init(){
       startingTotalWeight,
       section);
     section.blocks.push(block) 
+    section.openBlocks.push(block) 
     model.wave.push(block)
   }
   model.openBlocks = model.wave.slice(0, model.wave.length);
