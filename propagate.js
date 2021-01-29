@@ -117,9 +117,9 @@ function Propagate (model, loc){
   })
     
 
-//   propagateStack.forEach(function(loc){
-//     Propagate(model, loc)
-//  })
+   propagateStack.forEach(function(loc){
+     Propagate(model, loc)
+  })
 
     
     //ITERATE THROUGH THE PROPAGATE STACK
