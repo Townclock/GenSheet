@@ -1,7 +1,7 @@
 function Observe(model, propFlag=true)
 {
-  let locations = model.wave;
-  let loc = locations.slice(0, model.wave.length).indexOf(locations.slice(0, locations.length).sort(function(a,b){return a.weight-b.weight})[0]);
+  let loc = model.wave.slice(0, model.wave.length).indexOf(
+    model.openBlocks.sort(function(a,b){return a.weight-b.weight})[0]);
   let observedBlock = model.wave[loc];
 //        console.log(observedBlock.rules.length, observedBlock.section, model.wave)
 
@@ -29,6 +29,7 @@ function Observe(model, propFlag=true)
   //early fail state catch
   if (observedBlock.rules.length === 0) return false;
 
+console.log(model.wave.indexOf(observedBlock))
   if (propFlag)
   {
     Propagate(model, model.wave.indexOf(observedBlock));
@@ -51,6 +52,7 @@ function Observe(model, propFlag=true)
     })
 
   })*/
+  model.openBlocks.splice(model.openBlocks.indexOf(observedBlock),1);
   return true;
 }
 

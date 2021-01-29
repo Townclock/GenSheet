@@ -17,7 +17,7 @@ function Init(){
     // array of sections
     // section of specific type are required to be similar
     wave: [],
-
+    openBlocks: [],
     sections: [
       {id: 0, type:'A', blocks:[]},
       {id: 1, type:'A', blocks:[]},
@@ -117,5 +117,6 @@ function Init(){
     section.blocks.push(block) 
     model.wave.push(block)
   }
+  model.openBlocks = model.wave.slice(0, model.wave.length);
   return model;
 }
