@@ -1,8 +1,9 @@
 let majorPentatonic = [ 9, 12, 14, 16, 19 ]
 let minorPentatonic = [ 10, 12, 15, 17, 19]
-let mkeys = ["C", "C#", "D", "E@", "E", "F", "F#", "G", "A@", "A", "B@", "B"]
+let mkeys = ["C", "D@", "D", "E@", "E", "F", "F#", "G", "A@", "A", "B@", "B"]
 
   let translate = {
+"Aug7": { mod: 0, print: (key) => keys[key]+"aug7", scale:[]},
 "bII7": { mod: 1, print: (key) => keys[key]+"7", scale:[]},
 "biii7": { mod: 4, print: (key) => keys[key]+"-7", scale:[]},
 "bVII6": { mod: -2, print: (key) => keys[key]+"Maj6", scale:[]},
