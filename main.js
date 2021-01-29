@@ -26,6 +26,7 @@ function CopyRule(rule){
     follow: rule.follow, 
     mod:rule.mod, 
     weight: rule.weight,
+    leadingLength: rule.leadingLength,
     followLength: rule.followLength
   };
 }

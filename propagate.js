@@ -20,7 +20,8 @@ function Propagate (model, loc){
       // assume no rules are valid
       let valid = false
       focusRules.forEach(function(leadingRule){
-        if (leadingRule.follow === followingRule.lead 
+        if (leadingRule.follow === followingRule.lead
+          && leadingRule.followLength === followingRule.leadingLength
           && ((leadingRule.key+followingRule.mod+12)%12 === followingRule.key)
         ){
           valid = true;
@@ -54,6 +55,7 @@ function Propagate (model, loc){
         let valid = false
         focusRules.forEach(function(followingRule){
           if (leadingRule.follow === followingRule.lead  
+          && leadingRule.followLength === followingRule.leadingLength
             && ((leadingRule.key+followingRule.mod +12)%12 === followingRule.key)
           ){
             valid = true;
