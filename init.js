@@ -20,9 +20,9 @@ function Init(){
     openBlocks: [],
     sections: [
       {id: 0, type:'A', blocks:[], openBlocks: []},
-      //{id: 1, type:'A', blocks:[], openBlocks: []},
-      {id: 2, type:'B', blocks:[], openBlocks: []}
-      //{id: 3, type:'A', blocks:[], openBlocks: []}
+      {id: 1, type:'A', blocks:[], openBlocks: []},
+      {id: 2, type:'B', blocks:[], openBlocks: []},
+      {id: 3, type:'A', blocks:[], openBlocks: []}
     ],
   
     GetLocOffset: function (loc) {
@@ -93,29 +93,30 @@ function Init(){
       let originSectionBlocks = originBlock.section.openBlocks
       let ruleLength = originBlock.rules[0].followLength;
 
-      if (ruleLength < 3) return;
-      else {
+      let size = 1;
+
+      while (ruleLength > size){
         let blockToRemove = model.GetLooseBlocks(originSectionBlocks).slice(0, 1)
         if (blockToRemove < 1){
           console.log("could not grow", originBlock.rules[0] )
-          originBlock.length -= 2;
+          break;
         }
         else {
           this.RemoveBlocks(blockToRemove)
+          size += 1;
           console.log ("block removed")
-        }
-          
           //propagate to clear gap
-        let neighbor = model.Normalize(model.wave.indexOf(blockToRemove[0])-1);
-        console.log(neighbor)
-        //Propagate(model, neighbor);
+          let neighbor = model.Normalize(model.wave.indexOf(blockToRemove[0])-1);
+          Propagate(model, neighbor);
+        }
       }
+         originBlock.length = size; 
         
     }
 
   }
   //generate sections
-  for (i=0; i < 64; i++){
+  for (i=0; i < 128; i++){
     section = model.sections[Math.floor(i/32)];
     let block = new Block(
       chordRules.slice(0, chordRules.length), 

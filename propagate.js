@@ -83,7 +83,7 @@ function Propagate (model, loc){
   let sectionType = originBlock.section.type;
   let adjacentSections = model.sections.filter(function(e){return e.type === sectionType && e !== originBlock.section});
   let posInSection = originBlock.section.blocks.indexOf(originBlock);
-  console.log(posInSection)
+//  console.log(posInSection)
   // create consistency across sections
   adjacentSections.forEach(function(section){
       let adjacentBlock = section.blocks[posInSection];

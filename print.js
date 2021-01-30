@@ -48,7 +48,6 @@ function Print(model){
   let output = []
   for( let b = 0; b < model.wave.length; b++){
     let block = model.wave[b];
-    console.log(block.rules[0].follow)
     let mod = translate[block.rules[0].follow].mod;
     output.push(translate[block.rules[0].follow].print((block.rules[0].key + mod +12)%12));
 
