@@ -20,9 +20,9 @@ function Init(){
     openBlocks: [],
     sections: [
       {id: 0, type:'A', blocks:[], openBlocks: []},
-      {id: 1, type:'A', blocks:[], openBlocks: []},
-      {id: 2, type:'B', blocks:[], openBlocks: []},
-      {id: 3, type:'A', blocks:[], openBlocks: []}
+      //{id: 1, type:'A', blocks:[], openBlocks: []},
+      {id: 2, type:'B', blocks:[], openBlocks: []}
+      //{id: 3, type:'A', blocks:[], openBlocks: []}
     ],
   
     GetLocOffset: function (loc) {
@@ -116,7 +116,7 @@ function Init(){
   }
   //generate sections
   for (i=0; i < 64; i++){
-    section = model.sections[Math.floor(i/16)];
+    section = model.sections[Math.floor(i/32)];
     let block = new Block(
       chordRules.slice(0, chordRules.length), 
       startingTotalWeight,
