@@ -17,7 +17,7 @@ function Observe(model, propFlag=true)
       if (observedBlock.length === "x"){
         observedBlock.length = winner.followLength
   // remove blocks as many bocks as possible to reach length
-  //        model.Fit(loc)
+          model.Fit(loc)
       }
 
       break;
@@ -29,13 +29,12 @@ function Observe(model, propFlag=true)
   //early fail state catch
   if (observedBlock.rules.length === 0) return false;
 
-console.log(model.wave.indexOf(observedBlock))
+//  console.log(observedBlock)
   if (propFlag)
   {
     Propagate(model, model.wave.indexOf(observedBlock));
   }
   model.openBlocks.splice(model.openBlocks.indexOf(observedBlock),1);
-  console.log (observedBlock.section)
   observedBlock.section.openBlocks.splice(observedBlock.section.openBlocks.indexOf(observedBlock),1);
   return true;
 }

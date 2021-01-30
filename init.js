@@ -41,7 +41,7 @@ function Init(){
             model.openBlocks.splice(model.openBlocks.indexOf(adjacentBlockToRemove),1);
 
             section.blocks.splice(index, 1)
-            section.freeBlocks.splice(index, 1)
+            section.openBlocks.splice(section.openBlocks.indexOf(adjacentBlockToRemove), 1)
           }
 
         })
@@ -86,32 +86,37 @@ function Init(){
       } ,
     Fit: function(loc)
     {
-      // get the section to create space in 
+      // assume that each chord has 2 beats
+      // remove a chord block if it has 3 or 4 beats
       let model = this;
       let originBlock = model.wave[loc]
-      let originSectionBlocks = originBlock.section.blocks
+      let originSectionBlocks = originBlock.section.openBlocks
       let ruleLength = originBlock.rules[0].followLength;
 
-      let size;
-      for ( size = 1; size < ruleLength; size++){
-        let blocksToRemove = model.GetLooseBlocks(originSectionBlocks).slice(0, 1)
-        let neighbor = model.Normalize(model.wave.indexOf(blocksToRemove[0])+1);
-        Propagate(model, neighbor);
-        if (blocksToRemove < 1) break;
-        this.RemoveBlocks(blocksToRemove);
-      }
-
-      if (size ===1)
+      if (ruleLength < 3) return;
+      else {
+        let blockToRemove = model.GetLooseBlocks(originSectionBlocks).slice(0, 1)
+        if (blockToRemove < 1){
           console.log("could not grow", originBlock.rules[0] )
-      originBlock.length = size;
+          originBlock.length -= 2;
+        }
+        else {
+          this.RemoveBlocks(blockToRemove)
+          console.log ("block removed")
+        }
+          
+          //propagate to clear gap
+        let neighbor = model.Normalize(model.wave.indexOf(blockToRemove[0])-1);
+        console.log(neighbor)
+        //Propagate(model, neighbor);
+      }
         
     }
 
   }
-  let aSection, bSection;
-  //generate A section
-  for (i=0; i < 32; i++){
-    section = model.sections[Math.floor(i/8)];
+  //generate sections
+  for (i=0; i < 64; i++){
+    section = model.sections[Math.floor(i/16)];
     let block = new Block(
       chordRules.slice(0, chordRules.length), 
       startingTotalWeight,
