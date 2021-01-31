@@ -39,18 +39,18 @@ for (i = 0; i < chordRules.length; i++)
 let key = Math.floor(Math.random()*12);
 let startKey = keys[key]
 
-let model;
+let model = new Model();
 
 let progress;
 
-function RunUntilComplete(){
+function RunUntilComplete(song){
+  let backup = song.Copy();
+  let model = song;
   let quit = 0;
-  let br = 500;
   while (!CheckComplete(model)){
-    br--;
-    if (br < 0 || DetectErrorState(model) || Observe(model) == false){
-      console.log("Re-initialized. . .", quit, " times")
-      model = Init();
+    if ( Observe(model) == false){
+      console.log("Re-initialized. . .", quit, " times \n Copy Made: " , backup)
+      model = backup.Copy();
       br = 500;
       quit++;
     }
@@ -64,18 +64,24 @@ function RunUntilComplete(){
   {  
     Print(model)
   }
+  return model;
 }
 
 function ProceedSimple(){
+  model.Init([{type: 'A', length: 32}]);
   console.log("proceed simple")
-  model = Init([{type: "A", length: 32}]);
-  RunUntilComplete();
+  model = RunUntilComplete(model);
+  model.DuplicateSection(0);
+  model.AddSections([{type: 'B', length: 32}], true);
+  model.DuplicateSection(0);
+  console.log(model)
+  model = RunUntilComplete(model);
 }
 
 function Proceed(){ 
   progress = document.getElementById("progress");
-  model = Init()
-  RunUntilComplete()
+  model.Init()
+  model = RunUntilComplete(model)
 }
 
 
