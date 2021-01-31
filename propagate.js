@@ -19,14 +19,16 @@ function Propagate (model, loc){
 
       // assume no rules are valid
       let valid = false
-      focusRules.forEach(function(leadingRule){
+      for (let i = 0; i < focusRules.length; i++){
+        let leadingRule = focusRules[i];
         if (leadingRule.follow === followingRule.lead
           && leadingRule.followLength === followingRule.leadingLength
           && ((leadingRule.key+followingRule.mod+12)%12 === followingRule.key)
         ){
           valid = true;
+          break;
         }
-      })
+      }
       if (!valid)
       {
         rulesToRemove.push(index);
@@ -53,14 +55,16 @@ function Propagate (model, loc){
     previousRules.forEach(function(leadingRule, index){
         // assume no rules are valid
         let valid = false
-        focusRules.forEach(function(followingRule){
+        for (let i = 0; i < focusRules.length; i++){
+          let followingRule = focusRules[i]
           if (leadingRule.follow === followingRule.lead  
           && leadingRule.followLength === followingRule.leadingLength
             && ((leadingRule.key+followingRule.mod +12)%12 === followingRule.key)
           ){
             valid = true;
+            break;
           }
-        })
+        }
         if (!valid)
         { 
           rulesToRemove.push(index);
@@ -94,15 +98,17 @@ function Propagate (model, loc){
 
       adjacentBlock.rules.forEach(function (rule){
       let valid = false;
-        originBlock.rules.forEach(function(originRule){
+        for (let i = 0; i < focusRules.length; i++){
+        let originRule = focusRules[i]
           if ( rule.lead === originRule.lead &&
                rule.follow === originRule.follow && 
                rule.followLength === originRule.followLength &&
                rule.mod === originRule.mod
           ){
             valid = true;
+            break;
           }
-         })
+         }
          if (!valid)  {
             rulesToRemove.push(rule);
           }

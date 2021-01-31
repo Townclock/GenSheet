@@ -4,22 +4,8 @@
 //https://github.com/0xfe/vexflow
 
 let ALN = 1000000  // arbitrarily large number
-let keys = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"]
+let keys = ["C", "Db", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"]
 
-//leadLength?
-/*let protoRules = [
-  {lead:"I", follow:"I", mod: 4, weight: 0.5, followLength: 4},
-  {lead:"I", follow:"ii", mod: 0, weight: 1, followLength: 4},
-  {lead:"ii", follow:"V", mod: 0, weight: 1, followLength: 4},
-  {lead:"V", follow:"I", mod: 0, weight: 0.5, followLength: 4},
-  {lead:"V", follow:"ii", mod:-2 , weight: 0.5, followLength: 4},
-  {lead:"I", follow:"I", mod: 4, weight: 0.5, followLength: 2},
-  {lead:"I", follow:"ii", mod: 0, weight: 1, followLength: 2},
-  {lead:"ii", follow:"V", mod: 0, weight: 1, followLength: 2},
-  {lead:"V", follow:"I", mod: 0, weight: 0.5, followLength: 2},
-  {lead:"V", follow:"ii", mod:-2 , weight: 0.5, followLength: 2}
-
-]*/
 function CopyRule(rule){
   return {
     lead:rule.lead, 
@@ -57,16 +43,13 @@ let model;
 
 let progress;
 
-function Proceed(){ 
-  progress = document.getElementById("progress");
+function RunUntilComplete(){
   let quit = 0;
   let br = 500;
-  model = Init()
   while (!CheckComplete(model)){
     br--;
     if (br < 0 || DetectErrorState(model) || Observe(model) == false){
       console.log("Re-initialized. . .", quit, " times")
-      progress.innerHTML = "Attempts: " + quit;    
       model = Init();
       br = 500;
       quit++;
@@ -79,9 +62,20 @@ function Proceed(){
   }
   if (quit <= 500)
   {  
-    progress.innerHTML = "Success";    
     Print(model)
   }
+}
+
+function ProceedSimple(){
+  console.log("proceed simple")
+  model = Init([{type: "A", length: 32}]);
+  RunUntilComplete();
+}
+
+function Proceed(){ 
+  progress = document.getElementById("progress");
+  model = Init()
+  RunUntilComplete()
 }
 
 

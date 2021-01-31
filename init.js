@@ -9,21 +9,42 @@ function Block(rules, weight, section) {
 
   return block
 }
+function Section(id, type, length){
+  let section = {
+    id:id,
+    type:type,
+    blocks: [],
+    openBlocks: []
+  }
+
+  for (i=0; i < length; i++){
+    let block = new Block(
+      chordRules.slice(0, chordRules.length), 
+      startingTotalWeight,
+      section);
+    section.blocks.push(block) 
+    section.openBlocks.push(block) 
+  }
+  return section;
+}
 
 
-function Init(){
+let form = [
+  {type:'A', length:32},
+  {type:'A', length:32},
+  {type:'B', length:32},
+  {type:'A', length:32},
 
+]
+
+function Init(sections=form){
+  console.log(sections)
   let model = {
     // array of sections
     // section of specific type are required to be similar
     wave: [],
     openBlocks: [],
-    sections: [
-      {id: 0, type:'A', blocks:[], openBlocks: []},
-      {id: 1, type:'A', blocks:[], openBlocks: []},
-      {id: 2, type:'B', blocks:[], openBlocks: []},
-      {id: 3, type:'A', blocks:[], openBlocks: []}
-    ],
+    sections: [],
   
     GetLocOffset: function (loc) {
       let section = this.sections[this.GetSection(loc)];
@@ -116,16 +137,14 @@ function Init(){
 
   }
   //generate sections
-  for (i=0; i < 128; i++){
-    section = model.sections[Math.floor(i/32)];
-    let block = new Block(
-      chordRules.slice(0, chordRules.length), 
-      startingTotalWeight,
-      section);
-    section.blocks.push(block) 
-    section.openBlocks.push(block) 
-    model.wave.push(block)
-  }
+  sections.forEach(function(section, index) {
+    let newSection = new Section(index, section.type, section.length)
+    model.sections.push(newSection);
+    newSection.blocks.forEach(function(block){
+      model.wave.push(block);
+      model.openBlocks.push(block);
+    })
+  })
   model.openBlocks = model.wave.slice(0, model.wave.length);
   return model;
 }
