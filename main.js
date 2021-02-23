@@ -78,6 +78,26 @@ function ProceedSimple(){
   model = RunUntilComplete(model);
 }
 
+function ProceedSimpleSparse(){
+  let quit=20;
+  
+  while (quit > 0)
+  {
+    model.Init([{type: 'A', length: 32}]);
+    console.log("proceed simple")
+    model = RunUntilComplete(model);
+    model.DuplicateSection(0);
+    model.AddSections([{type: 'B', length: 32}], true);
+    model.DuplicateSection(0);
+    console.log(model)
+    model = RunUntilComplete(model);
+    if (model.wave.length < 48)
+      break;
+    quit--;
+  }
+  if (quit < 0) alert("after 20 attempts did not generate a sparse song")
+}
+
 function Proceed(){ 
   progress = document.getElementById("progress");
   model.Init()
