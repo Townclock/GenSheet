@@ -50,10 +50,10 @@ function PickRandomNoteForChord(block){
     let mod = translate[block.rules[0].follow].mod;
     let key = block.rules[0].key;
     let data = translate[block.rules[0].follow];
-  console.log(data.scale)
+//  console.log(data.scale)
     let scaleNote = data.scale[Math.floor(Math.random()*data.scale.length)]
     
-    console.log(data, key, mod, scaleNote) 
+    //console.log(data, key, mod, scaleNote) 
     return data.root + key + mod/*this gets root*/ + scaleNote
 }
 
@@ -100,7 +100,12 @@ console.log(melodyOutput.length, output.length)
         console.log(melodyBars[i][m], i, m, melodyBars, bars)
         if (melodyBars[i][m] != "`"){
           melodyBars[i][m].forEach(function(beat){
-            vexTabOutput += " :" +beat.length +  ((beat.rest) ? "##" : (mkeys[beat.note]+"/"+beat.octave+" ")); 
+            vexTabOutput += 
+              " :" +beat.length + 
+              ((beat.dotted) ? "d" : "") + 
+              " "  +  
+              ((beat.bar) ? "b" : "") + " " + 
+              ((beat.rest) ? "##" : (mkeys[beat.note%12]+"/"+"4"+" ")); 
           })
         }
       }
