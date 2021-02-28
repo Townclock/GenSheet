@@ -49,18 +49,16 @@ function RunUntilComplete(song){
   let quit = 0;
   while (!CheckComplete(model)){
     if ( Observe(model) == false){
-      console.log("Re-initialized. . .", quit, " times \n Copy Made: " , backup)
+      //console.log("Re-initialized. . .", quit, " times \n Copy Made: " , backup)
       model = backup.Copy();
-      br = 500;
       quit++;
     }
 
-    if (quit >500) {
-      progress.innerHTML = "Failure, Retry?";    
+    if (quit >1000) { 
       console.log("DISASTER");break
     };
   }
-  if (quit <= 500)
+  if (quit <= 1000)
   {  
     Print(model)
   }
@@ -68,13 +66,13 @@ function RunUntilComplete(song){
 }
 
 function ProceedSimple(){
-  model.Init([{type: 'A', length: 32}]);
+  model.Init([{type: 'A', measures: 8}]);
   console.log("proceed simple")
   model = RunUntilComplete(model);
   model.DuplicateSection(0);
-  model.AddSections([{type: 'B', length: 32}], true);
+  model.AddSections([{type: 'B', measures: 8}], true);
   model.DuplicateSection(0);
-  console.log(model)
+  //console.log(model)
   model = RunUntilComplete(model);
 }
 
@@ -83,11 +81,11 @@ function ProceedSimpleSparse(){
   
   while (quit > 0)
   {
-    model.Init([{type: 'A', length: 32}]);
+    model.Init([{type: 'A', measures: 8}]);
     console.log("proceed simple")
     model = RunUntilComplete(model);
     model.DuplicateSection(0);
-    model.AddSections([{type: 'B', length: 32}], true);
+    model.AddSections([{type: 'B', measures: 8}], true);
     model.DuplicateSection(0);
     console.log(model)
     model = RunUntilComplete(model);
@@ -104,7 +102,33 @@ function Proceed(){
   model = RunUntilComplete(model)
 }
 
+let probWeights = [0,0,0,0,0];
+	chordRules.forEach(function(rule){
+		probWeights[rule.followLength] += rule.weight;
+	})
+	
+function GenLengthOutline (measures){
+	let blocks = [];
 
+	for (let i = 0; i < measures; i++){
+		let measureLeft = 4;
+		
+		while (measureLeft > 0){
+			let pick =Math.floor(Math.random()*startingTotalWeight)
+			for (let l = 4; l > 0; l--){
+					//console.log(pick, probWeights[l], l, l <= measureLeft)
+				if (pick < probWeights[l] && l <= measureLeft && !(l ==1 && measureLeft == 4)){
+					measureLeft -= l;
+					blocks.push(l);
+				}
+				else
+					pick -= probWeights[l];
+				
+			}
+		}
+	}
+	return blocks;
+}
 
 
 

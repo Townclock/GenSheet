@@ -44,6 +44,10 @@ function GenBeats(chordSection){
             melBlock.push({length: 4,dotted:dotted, note:PickRandomNoteForChord(block) , rest: rest, bar:bar});
             bar = false;  
             break;
+		  case "q":
+            melBlock.push({length: 4,dotted:dotted, note:PickRandomNoteForChord(block) , rest: rest, bar:bar});
+            bar = false;  
+            break;
           case "E":
             melBlock.push({length: 8,dotted:dotted, note:PickRandomNoteForChord(block) , rest: rest, bar:bar});
             bar = false;  
@@ -53,6 +57,13 @@ function GenBeats(chordSection){
             bar = false;  
             break;
       
+	  
+	  
+	  	  case "3":
+			console.log(melBlock)
+            melBlock[melBlock.length-1].triplet = true;  
+            break;
+	  
           case "-":
             bar = true;
             break;
@@ -96,5 +107,5 @@ function PrepareMelodyModel(chordModel){
 }
 function GenerateMelody(){
   PrepareMelodyModel(model);
-  //Print(model, MelodyModel)
+  Print(model, MelodyModel)
 }

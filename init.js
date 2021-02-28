@@ -1,8 +1,8 @@
-function Block(rules, weight, section) {
+function Block(rules, weight, section, length) {
   let block = {
     rules: rules,
     weight: weight,
-    length: 'x',
+    length: (length) ? length : 'x',
     section: section,
     Copy: function(){
       let b = new Block(this.rules.slice(0, this.rules.length), this.weight, "orphan")
@@ -14,7 +14,7 @@ function Block(rules, weight, section) {
 
   return block
 }
-function Section(id, type, length){
+function Section(id, type, measures){
   let section = {
     id:id,
     type:type,
@@ -33,12 +33,14 @@ function Section(id, type, length){
       return s;
     }
   }
-
-  for (i=0; i < length; i++){
+  let blockLengths = GenLengthOutline(measures);
+  
+  for (i=0; i < blockLengths.length; i++){
     let block = new Block(
-      chordRules.slice(0, chordRules.length), 
-      startingTotalWeight,
-      section);
+      chordRules.slice(0, chordRules.length).filter(function(rule){return rule.followLength ===blockLengths[i]}), 
+      probWeights[blockLengths[i]],
+      section,
+	  blockLengths[i]);
     section.blocks.push(block) 
     section.openBlocks.push(block) 
   }
@@ -47,10 +49,8 @@ function Section(id, type, length){
 
 
 let form = [
-  {type:'A', length:32},
-  {type:'A', length:32},
-  {type:'B', length:32},
-  {type:'A', length:32},
+  {type:'A', measures: 8},
+  {type:'B', measures: 8}
 ]
 
 class Model {
@@ -91,9 +91,11 @@ class Model {
       neighbors.push(0)
       neighbors.push(this.wave.length-1)
     }
+	
     //generate sections
     sections.forEach(function(section, index) {
-      let newSection = new Section(index, section.type, section.length)
+  console.log(index, section.type, section.measures)
+      let newSection = new Section(index, section.type, section.measures)
       model.sections.push(newSection);
       newSection.blocks.forEach(function(block){
         model.wave.push(block);

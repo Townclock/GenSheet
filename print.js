@@ -104,8 +104,9 @@ console.log(melodyOutput.length, output.length)
               " :" +beat.length + 
               ((beat.dotted) ? "d" : "") + 
               " "  +  
-              ((beat.bar) ? "b" : "") + " " + 
+              ((beat.bar && !beat.rest) ? "b" : "") + " " + 
               ((beat.rest) ? "##" : (mkeys[beat.note%12]+"/"+"4"+" ")); 
+			  if (beat.triplet) vexTabOutput += " ^3^ ";
           })
         }
       }
