@@ -63,7 +63,12 @@ function Print(model, melodyModel=false){
   for( let b = 0; b < model.wave.length; b++){
     let block = model.wave[b];
     let mod = translate[block.rules[0].follow].mod;
-    output.push(translate[block.rules[0].follow].print((block.rules[0].key + mod +12)%12));
+    output.push(
+	{ 
+		length: block.length,
+		text: translate[block.rules[0].follow].print((block.rules[0].key + mod +12)%12)
+	}
+	);
 
     if (melodyModel){
       console.log(melodyModel[block.section.type][block.section.blocks.indexOf(block)])
@@ -77,7 +82,7 @@ function Print(model, melodyModel=false){
 
 
   }
-  console.log(melodyOutput, "check here")
+  console.log(output)
   let bars = [];
   let melodyBars = [];
   for (let b = 0; b < output.length; b += 12){
@@ -97,7 +102,7 @@ console.log(melodyOutput.length, output.length)
     
     for (let m = 0; m < bar.length; m++){ 
       if (melodyModel){
-        console.log(melodyBars[i][m], i, m, melodyBars, bars)
+        //console.log(melodyBars[i][m], i, m, melodyBars, bars)
         if (melodyBars[i][m] != "`"){
           melodyBars[i][m].forEach(function(beat){
             vexTabOutput += 
@@ -116,14 +121,25 @@ console.log(melodyOutput.length, output.length)
       if ((m+1) % 4 === 0) {vexTabOutput += " |"}
     }
       
-    vexTabOutput +=   "\n text :4,";
+  
+	let count = 0;
     bar.forEach(function(chord, pos){
-      //if( chord !== "`"){
-        if (pos % 4 === 0 ) vexTabOutput += " ";
-        if (pos !== 0) vexTabOutput += ", "
-        vexTabOutput += chord;
-        if (pos+1 === bar.length) vexTabOutput +="  \n ";
-      //}
+	  let lengthKey = [0, "q", "h", "hd", "w" ]
+      if( chord !== "`"){
+		  
+		if (count % 4 === 0 )     vexTabOutput +=   "\n text ";
+		  
+		count += chord.length;
+
+        vexTabOutput += ":" + lengthKey[chord.length] + ", "
+		
+        
+		vexTabOutput +=  chord.text + ", ";
+		
+		if (count % 4 === 0 ) vexTabOutput += " | ";
+        
+		if (pos+1 === bar.length) vexTabOutput +="  \n ";
+      }
     });
     vexTabOutput += " \noptions space=20\n"
   }) 
