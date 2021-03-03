@@ -52,6 +52,10 @@ function GenBeats(chordSection){
             melBlock.push({length: 8,dotted:dotted, note:PickRandomNoteForChord(block) , rest: rest, bar:bar});
             bar = false;  
             break;
+          case "e":
+            melBlock.push({length: 8,dotted:dotted, note:PickRandomNoteForChord(block) , rest: rest, bar:bar});
+            bar = false;  
+            break;
           case "S":
             melBlock.push({length: 16,dotted:dotted, note:PickRandomNoteForChord(block) , rest: rest, bar:bar});
             bar = false;  
@@ -105,6 +109,7 @@ function PrepareMelodyModel(chordModel){
   });
 
 }
+
 function GenerateMelody(){
   PrepareMelodyModel(model);
   Print(model, MelodyModel)

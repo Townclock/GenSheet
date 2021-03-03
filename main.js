@@ -102,27 +102,91 @@ function Proceed(){
   model = RunUntilComplete(model)
 }
 
+
+let chordTime = 0;
+let bpm = 180;
+let quarterNote = 60/bpm; 
+
+function PlayModel(){
+	
+		  //create a synth and connect it to the main output (your speakers)
+	const synth = new Tone.PolySynth().toDestination();
+
+model.wave.forEach(function(block){
+		
+			let chordNotes = translate[block.rules[0].follow].notes
+			let root = translate[block.rules[0].follow].root
+			let key = block.rules[0].key
+			
+			let chordArray = []
+			chordNotes.forEach(function(note){
+				chordArray.push(
+					keys[(key + root + note+12)%12] + (((key + root + note) > 12)?"4":"3")
+				)
+			});
+			console.log(chordArray)
+			chordTime += block.length;
+			synth.triggerAttackRelease(chordArray, quarterNote, quarterNote*chordTime+5);
+			
+			//set melody notes
+			let position = block.section.blocks.indexOf(block);
+			
+			
+			let noteTime = 0;
+			MelodyModel[block.section.type][position].forEach(function(melBlock){
+				console.log(quarterNote*chordTime +   quarterNote*noteTime/(melBlock.length)/4   + 5)
+				if (!melBlock.rest)
+				  synth.triggerAttackRelease( 
+					keys[(melBlock.note+12)%12]+"6", 
+					quarterNote/2, 
+					quarterNote*chordTime +   quarterNote*noteTime   + 5
+				  );
+				noteTime += 4 / melBlock.length;
+			})
+		
+	})
+
+
+Tone.Transport.start();
+
+
+	
+}
+
+
 let probWeights = [0,0,0,0,0];
+// based on what previous length is inputed, what are the chances of the next of some length
+let chainWeights = [[],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]];
+// the sum of all chances for the following lengths
+let chainTotals = [0,0,0,0,0];
+
 	chordRules.forEach(function(rule){
 		probWeights[rule.followLength] += rule.weight;
+		chainWeights[rule.leadingLength][rule.followLength] += rule.weight;
+		chainTotals[rule.leadingLength] += rule.weight;
 	})
+console.log(chainWeights, chainTotals);
+
 	
 function GenLengthOutline (measures){
 	let blocks = [];
-
+	let prevLength = 2;
 	for (let i = 0; i < measures; i++){
 		let measureLeft = 4;
 		
 		while (measureLeft > 0){
-			let pick =Math.floor(Math.random()*startingTotalWeight)
+			//let pick =Math.floor(Math.random()*startingTotalWeight)
+			let pick = Math.floor(Math.random()*chainTotals[prevLength])
 			for (let l = 4; l > 0; l--){
-					//console.log(pick, probWeights[l], l, l <= measureLeft)
-				if (pick < probWeights[l] && l <= measureLeft && !(l ==1 && measureLeft == 4)){
+			  console.log(pick, chainWeights[prevLength][l], l, l <= measureLeft)
+				//if (pick < probWeights[l] && l <= measureLeft && !(l ==1 && measureLeft == 4)){
+				if (pick < chainWeights[prevLength][l] && l <= measureLeft && !(l ==1 && measureLeft == 4)){
 					measureLeft -= l;
 					blocks.push(l);
+					prevLength = l;
 				}
 				else
-					pick -= probWeights[l];
+					pick -= chainWeights[prevLength][l];
 				
 			}
 		}
