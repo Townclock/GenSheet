@@ -62,7 +62,7 @@ function ProcessRhythms (data){
 }
 
 function CompressRules (ruleList){
-  console.log(ruleList)
+//  console.log(ruleList)
   for (let x = ruleList.length-1; x > -1 ; x--){
     for (let i = x-1; i > -1; i--){
       if (SameRule(ruleList[i], ruleList[x])){

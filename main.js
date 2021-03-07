@@ -104,13 +104,15 @@ function Proceed(){
 
 
 let chordTime = 0;
-let bpm = 180;
+let bpm = 120;
 let quarterNote = 60/bpm; 
 
 function PlayModel(){
 	
 		  //create a synth and connect it to the main output (your speakers)
 	const synth = new Tone.PolySynth().toDestination();
+	synth.options.envelope.release = 0.3
+	console.log(synth)
 
 model.wave.forEach(function(block){
 		
@@ -138,10 +140,10 @@ model.wave.forEach(function(block){
 				if (!melBlock.rest)
 				  synth.triggerAttackRelease( 
 					keys[(melBlock.note+12)%12]+"6", 
-					quarterNote/2, 
-					quarterNote*chordTime +   quarterNote*noteTime   + 5
+					(quarterNote * 4/melBlock.length) * ((melBlock.dotted)?1.5:1), 
+					quarterNote*chordTime +   quarterNote*noteTime *((melBlock.playTriplet) ? (2/3) : 1 )  + 5
 				  );
-				noteTime += 4 / melBlock.length;
+				noteTime += (4 / (melBlock.length) * (melBlock.dotted)?1.5:1);
 			})
 		
 	})

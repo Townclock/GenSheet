@@ -45,7 +45,7 @@ function GenBeats(chordSection){
             bar = false;  
             break;
 		  case "q":
-            melBlock.push({length: 4,dotted:dotted, note:PickRandomNoteForChord(block) , rest: rest, bar:bar});
+            melBlock.push({length: 4,dotted:dotted, note:PickRandomNoteForChord(block) , rest: rest, bar:bar, playTriplet:true});
             bar = false;  
             break;
           case "E":
@@ -53,7 +53,7 @@ function GenBeats(chordSection){
             bar = false;  
             break;
           case "e":
-            melBlock.push({length: 8,dotted:dotted, note:PickRandomNoteForChord(block) , rest: rest, bar:bar});
+            melBlock.push({length: 8,dotted:dotted, note:PickRandomNoteForChord(block) , rest: rest, bar:bar, playTriplet: true});
             bar = false;  
             break;
           case "S":
@@ -74,6 +74,7 @@ function GenBeats(chordSection){
 
           case "R":
             rest = true;
+			bar = false;  
             break;
           case ")":
             rest=false;
