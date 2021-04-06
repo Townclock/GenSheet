@@ -128,7 +128,7 @@ model.wave.forEach(function(block){
 			});
 			console.log(chordArray)
 			chordTime += block.length;
-			synth.triggerAttackRelease(chordArray, quarterNote, quarterNote*chordTime+5);
+			synth.triggerAttackRelease(chordArray, quarterNote, quarterNote*chordTime+2);
 			
 			//set melody notes
 			let position = block.section.blocks.indexOf(block);
@@ -136,12 +136,12 @@ model.wave.forEach(function(block){
 			
 			let noteTime = 0;
 			MelodyModel[block.section.type][position].forEach(function(melBlock){
-				console.log(quarterNote*chordTime +   quarterNote*noteTime/(melBlock.length)/4   + 5)
+				console.log(quarterNote*chordTime +   quarterNote*noteTime/(melBlock.length)/4   + 2)
 				if (!melBlock.rest)
 				  synth.triggerAttackRelease( 
 					keys[(melBlock.note+12)%12]+"6", 
 					(quarterNote * 4/melBlock.length) * ((melBlock.dotted)?1.5:1), 
-					quarterNote*chordTime +   quarterNote*noteTime *((melBlock.playTriplet) ? (2/3) : 1 )  + 5
+					quarterNote*chordTime +   quarterNote*noteTime *((melBlock.playTriplet) ? (2/3) : 1 )  + 2
 				  );
 				noteTime += (4 / (melBlock.length) * (melBlock.dotted)?1.5:1);
 			})
