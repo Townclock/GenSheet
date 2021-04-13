@@ -66,6 +66,17 @@ let domSusFourChord = [0,5,7,10]
 "VIMaj7" : { mod: 9, print: (key) => keys[key]+"Maj7", scale: majorPentatonic, root:9, notes: majorChord}
 }
 
+function GetScaleForChord(block){
+    let mod = translate[block.rules[0].follow].mod;
+    let key = block.rules[0].key;
+    let data = translate[block.rules[0].follow];
+	let scale = [];
+	data.scale.forEach(function(interval){
+		scale.push(data.root + key + mod/*this gets root*/ + interval)
+	})
+	return scale;
+	
+}
 
 function PickRandomNoteForChord(block){
     let mod = translate[block.rules[0].follow].mod;
@@ -76,6 +87,8 @@ function PickRandomNoteForChord(block){
     
     //console.log(data, key, mod, scaleNote) 
     return data.root + key + mod/*this gets root*/ + scaleNote
+	
+	// outputs absolute position of the note
 }
 
 function Print(model, melodyModel=false){
@@ -92,7 +105,7 @@ function Print(model, melodyModel=false){
 	);
 
     if (melodyModel){
-      console.log(melodyModel[block.section.type][block.section.blocks.indexOf(block)])
+    // console.log(melodyModel[block.section.type][block.section.blocks.indexOf(block)])
       melodyOutput.push(melodyModel[block.section.type][block.section.blocks.indexOf(block)])
     }
 
@@ -103,14 +116,14 @@ function Print(model, melodyModel=false){
 
 
   }
-  console.log(output)
+  //console.log(output)
   let bars = [];
   let melodyBars = [];
   for (let b = 0; b < output.length; b += 12){
     bars.push(output.slice(b, b+12))
     melodyBars.push(melodyOutput.slice(b, b+12))
   } 
-console.log(melodyOutput.length, output.length)
+//console.log(melodyOutput.length, output.length)
 
 
 

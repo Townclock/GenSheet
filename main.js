@@ -54,7 +54,7 @@ function RunUntilComplete(song){
       quit++;
     }
 
-    if (quit >1000) { 
+    if (quit >10000) { 
       console.log("DISASTER");break
     };
   }
@@ -180,7 +180,7 @@ function GenLengthOutline (measures){
 			//let pick =Math.floor(Math.random()*startingTotalWeight)
 			let pick = Math.floor(Math.random()*chainTotals[prevLength])
 			for (let l = 4; l > 0; l--){
-			  console.log(pick, chainWeights[prevLength][l], l, l <= measureLeft)
+			  //console.log(pick, chainWeights[prevLength][l], l, l <= measureLeft)
 				//if (pick < probWeights[l] && l <= measureLeft && !(l ==1 && measureLeft == 4)){
 				if (pick < chainWeights[prevLength][l] && l <= measureLeft && !(l ==1 && measureLeft == 4)){
 					measureLeft -= l;
