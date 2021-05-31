@@ -68,7 +68,7 @@ function PickNotes (melodyModel){
 				
 				block.scoresForPossibleNotes.push(score);
 				block.weight += score;
-				if (index === 1) block.bar = false; // sections can not begin with bared notes
+				if (index === 0) block.bar = false; // sections can not begin with bared notes
 				if (block.bar) block.weight = ALN - 5; // bad practice here
 			})
 		})
@@ -76,8 +76,117 @@ function PickNotes (melodyModel){
 		MelodyWFC(melodySection)
 		
 	})
-	console.log(melodySections);
 	
+}
+
+function RemoveFromArray(e, array){
+	let index = array.indexOf(e);
+	if (index > -1) {
+		array.splice(index, 1);
+	}
+}
+
+function MelodyPropagate(melodySection, melodyBlock){ 
+console.log ("hi")
+		//left hand
+        
+        // if we are not the 0th block
+		if (melodySection.indexOf(melodyBlock) > 0){
+            
+            // identify the block to the left
+			let neighbor = melodySection[melodySection.indexOf(melodyBlock) - 1]
+            let weightChange = neighbor.weight;
+            
+            // if it doesn't bar into this one and if it hasn't been collapsed
+			if (!neighbor.bar && neighbor.weight <ALN){
+                
+                // create a copy of all of its possible pitches
+				let possibleRemovals = neighbor.possibleNotes.slice(0, neighbor.possibleNotes.length);
+                
+                // for each of the possible pitches in this block
+				melodyBlock.possibleNotes.forEach(function(melodyNote, i){
+                
+                // for each possible pitch in the neighbor
+				neighbor.possibleNotes.forEach(function(neighborNote, j){
+                    
+                    // if a note in the origin block is possible
+					if (melodyBlock.scoresForPossibleNotes[i] > 0){
+                        // and it is possible for a neighbord note to lead into this block
+						if (probabilities[melodyNote - neighborNote] > 0){
+                            // remove that possible neighbor pitch from the list of pitches to remove
+							RemoveFromArray(neighborNote, possibleRemovals)
+                            
+                            
+                            // in theory this keeps all valid notes leading from the neighbor into this note
+					}
+					else
+					{
+														// we are not adjusting weights unless to remove probability
+														// we could adjust the weights, based on likehood to follow
+														//like a weighted propagation because weights are a sum of 
+														//leading note weights, we're not doing that right now}
+														//that would go here
+														
+														//This will be much more important if chord restrictions were weights (which they should be) rather
+														// than discrete allowances 
+					}
+					
+				}
+				})
+				})
+                
+                // this removes all the weight from notes which will not be used
+
+				possibleRemovals.forEach(function(noteToRemove){
+					let index = neighbor.possibleNotes.indexOf(noteToRemove)
+					neighbor.weight -= neighbor.scoresForPossibleNotes[index];
+					neighbor.scoresForPossibleNotes[index]=0;
+
+				})
+                
+			}
+            if (neighbor.weight !== weightChange) MelodyPropagate(melodySection, neighbor)
+		}
+        
+        
+		//right hand
+		if (melodySection.indexOf(melodyBlock) < melodySection.length - 2){
+			console.log(melodySection.indexOf(melodyBlock),  melodySection.length, melodySection)
+			let neighbor = melodySection[melodySection.indexOf(melodyBlock) + 1]
+            let weightChange = neighbor.weight;
+			if (!neighbor.bar && neighbor.weight <ALN){
+				let possibleRemovals = neighbor.possibleNotes.slice(0, neighbor.possibleNotes.length);
+				melodyBlock.possibleNotes.forEach(function(melodyNote, i){
+				neighbor.possibleNotes.forEach(function(neighborNote, j){
+					if (melodyBlock.scoresForPossibleNotes[i] > 0){
+						if (probabilities[ neighborNote - melodyNote] > 0){
+							RemoveFromArray(neighborNote, possibleRemovals)
+					}
+					else
+					{
+										
+														// we are not adjusting weights unless to remove probability
+														// we could adjust the weights, based on likehood to follow
+														//like a weighted propagation because weights are a sum of 
+														//leading note weights, we're not doing that right now}
+														//that would go here
+														
+														//This will be much more important if chord restrictions were weights rather
+														// than discrete allowances (which they should be)
+					}
+				}
+				})
+				})
+				possibleRemovals.forEach(function(noteToRemove){
+					let index = neighbor.possibleNotes.indexOf(noteToRemove)
+					neighbor.weight -= neighbor.scoresForPossibleNotes[index];
+					neighbor.scoresForPossibleNotes[index]=0;
+
+				})
+			}
+            if (neighbor.weight !== weightChange) MelodyPropagate(melodySection, neighbor)
+		}
+
 }
 
 function MelodyWFC(melodySection){
@@ -86,15 +195,23 @@ function MelodyWFC(melodySection){
 		melodyBlock = melodySection.slice(0, melodySection.length).sort(function(a,b){return a.weight-b.weight})[0];
 		if (melodyBlock.bar === false) {
 			let pick = Math.random()*melodyBlock.weight;
+            console.log(melodyBlock.weight)
+			let winner = false;
 				for (let j = 0; j < melodyBlock.possibleNotes.length; j++){
-					if (pick < melodyBlock.scoresForPossibleNotes) {
-						let winner = melodyBlock.possibleNotes[j];
+					if (pick < melodyBlock.scoresForPossibleNotes[j]) {
+					console.log(pick, (melodyBlock.scoresForPossibleNotes[j] / melodyBlock.weight), melodyBlock.possibleNotes[j])
+						if (melodyBlock.weight === melodyBlock.scoresForPossibleNotes[j]) console.log("was the only options")
+						winner = melodyBlock.possibleNotes[j];
 						melodyBlock.note = winner
 					}
-			}
+					else {
+						pick -= melodyBlock.scoresForPossibleNotes[j];
+						melodyBlock.scoresForPossibleNotes[j] = 0;
+					}
+				}
+			if (!winner) {console.log("defaulting to random bote in chord scale for melody block")}
 		}
 		else {
-			console.log(melodySection[melodySection.indexOf(melodyBlock) - 1].rest)
 			melodyBlock.note = melodySection[melodySection.indexOf(melodyBlock) - 1].note;
 			console.log(melodySection[melodySection.indexOf(melodyBlock)].note)
 			console.log(melodySection[melodySection.indexOf(melodyBlock) - 1].note)
@@ -102,10 +219,11 @@ function MelodyWFC(melodySection){
 		
 		
 		melodyBlock.weight = ALN;
+		
+		MelodyPropagate(melodySection, melodyBlock)
 	}
 	
 }
-// FINISH THE ABOVEW FUNCTION
 
 
 let  MelodyModel

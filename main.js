@@ -172,7 +172,7 @@ console.log(chainWeights, chainTotals);
 	
 function GenLengthOutline (measures){
 	let blocks = [];
-	let prevLength = 2;
+	let prevLength = 2; // arbitray, should be input from previous section if it exists
 	for (let i = 0; i < measures; i++){
 		let measureLeft = 4;
 		
