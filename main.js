@@ -25,9 +25,14 @@ protoRules.forEach(function(rule){
     let keyedRule = CopyRule(rule);
     keyedRule.key = i;
     chordRules.push(keyedRule);
+    
+    cadences["types"].forEach(function(type) {
+        if (FilterRulesThatFitsCadence([rule], type).length === 1 )
+            cadenceRules[type].push(keyedRule);
+    })
+    
   }
 });
-
 
 
 let startingTotalWeight = 0;
@@ -66,7 +71,7 @@ function RunUntilComplete(song){
 }
 
 function ProceedSimple(){
-  model.Init([{type: 'A', measures: 8}]);
+  model.Init([{type: 'A', measures: 8, cadences:[  {type: "half"} ]}]); // cadence resolve at the end
   console.log("proceed simple")
   model = RunUntilComplete(model);
   model.DuplicateSection(0);

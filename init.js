@@ -1,3 +1,5 @@
+// note should have a function run Propagate on all blocks at the beginning to account for specified cadences
+
 function Block(rules, weight, section, length) {
   let block = {
     rules: rules,
@@ -14,7 +16,7 @@ function Block(rules, weight, section, length) {
 
   return block
 }
-function Section(id, type, measures){
+function Section(id, type, measures, cadenceList){
   let section = {
     id:id,
     type:type,
@@ -43,6 +45,21 @@ function Section(id, type, measures){
 	  blockLengths[i]);
     section.blocks.push(block) 
     section.openBlocks.push(block) 
+  }
+  
+  if (cadenceList){
+      let position = section.blocks.length - 1;
+      cadenceList.forEach(function(cadence){
+          let block = section.blocks[position];
+          let type = cadence.type;
+          
+          let newRules = cadenceRules[type].slice(0, block.length).filter(function(rule){return rule.followLength === block.length})
+
+          block.rules = newRules;
+          block.weight = newRules.reduce(function(a, rule){ return a + rule.weight}, 0)
+          //console.log(block, type)
+          position --;
+      })
   }
   return section;
 }
@@ -94,8 +111,8 @@ class Model {
 	
     //generate sections
     sections.forEach(function(section, index) {
-  console.log(index, section.type, section.measures)
-      let newSection = new Section(index, section.type, section.measures)
+  console.log(index, section.type, section.measures, section.cadences)
+      let newSection = new Section(index, section.type, section.measures, section.cadences)
       model.sections.push(newSection);
       newSection.blocks.forEach(function(block){
         model.wave.push(block);
