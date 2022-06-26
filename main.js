@@ -112,11 +112,54 @@ let chordTime = 0;
 let bpm = 120;
 let quarterNote = 60/bpm; 
 
+
+const synth = new Tone.Sampler({
+    urls: {
+        "A0": "audio/A0.mp3",
+        "A1": "audio/A1.mp3",
+        "A2": "audio/A2.mp3",
+        "A3": "audio/A3.mp3",
+        "A4": "audio/A4.mp3",
+        "A5": "audio/A5.mp3",
+        "A6": "audio/A6.mp3",
+        "A7": "audio/A7.mp3",
+        "C1": "audio/C1.mp3",
+        "C2": "audio/C2.mp3",
+        "C3": "audio/C3.mp3",
+        "C4": "audio/C4.mp3",
+        "C5": "audio/C5.mp3",
+        "C6": "audio/C6.mp3",
+        "C7": "audio/C7.mp3",
+        "C8": "audio/C8.mp3",
+        "D#1": "audio/Ds1.mp3",
+        "D#2": "audio/Ds2.mp3",
+        "D#3": "audio/Ds3.mp3",
+        "D#4": "audio/Ds4.mp3",
+        "D#5": "audio/Ds5.mp3",
+        "D#6": "audio/Ds6.mp3",
+        "D#7": "audio/Ds7.mp3",
+        "F#1": "audio/Fs1.mp3",
+        "F#2": "audio/Fs2.mp3",
+        "F#3": "audio/Fs3.mp3",
+        "F#4": "audio/Fs4.mp3",
+        "F#5": "audio/Fs5.mp3",
+        "F#6": "audio/Fs6.mp3",
+        "F#7": "audio/Fs7.mp3"
+    
+    },
+    release: 1, 
+    baseURL : ".", 
+}).toDestination();
+
 function PlayModel(){
 	
 		  //create a synth and connect it to the main output (your speakers)
-	const synth = new Tone.PolySynth().toDestination();
-	synth.options.envelope.release = 0.3
+	//const synth = new Tone.PolySynth().toDestination();
+	
+    // sampler developed later, also lives in playback.js, but i'm feeling hacky and want that sweet dopamine hit
+    
+    //
+    //synth.options.envelope.release = 0.3
 	console.log(synth)
 
 model.wave.forEach(function(block){
